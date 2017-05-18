@@ -2,19 +2,14 @@
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Config;
 
-class Helper{
+class Common{
     /**
      * 用于接口调用的app_secret
      * @var string
      */
     static public $app_secret = 'dzkcw_mak';
-    
-    /**
-     * 用于内容加密content_secret
-     * @var string
-     */
-    //static public $content_secret = 'dzkcw_content';
     
     /**
      * 用于验证用户真实性
@@ -26,11 +21,30 @@ class Helper{
      * 发送get请求
      * @return array
      */
-    static public function sendHttp(){
+    static public function sendHttp($url){
         $client = new Client();
-        $request = $client->get('http://lrz.ucenter.com/api/router');
+        $request = $client->get($url);
     
         return json_decode($request->getBody(),true);
+    }
+    
+    /**
+     * md5方式签名
+     * @param  array $params 待签名参数
+     * @return string
+     */
+    static public function generateMd5Sign($params)
+    {
+        ksort($params);
+    
+        $tmps = array();
+        foreach ($params as $k => $v) {
+            $tmps[] = $k . $v;
+        }
+    
+        $string = self::$app_secret . implode('', $tmps) . self::$app_secret;
+    
+        return strtoupper(md5($string));
     }
     
 }
