@@ -17,6 +17,7 @@ class Common{
      */
     static public $auth_secret = 'dzkcw_auth';
     
+    
     /**
      * 发送get请求
      * @return array
